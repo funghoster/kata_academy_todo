@@ -3,17 +3,17 @@ import Task from '../task/task';
 
 import './task-list.css'
 
-const TaskList = ({props}) => {
-    const elements = props.map((item) => {
-        const { id, important, ...descr } = item
-        let element
-        if (important === 'editing'){
-            element = <input type="text" className="edit" defaultValue="Editing task"></input>
-        }
+const TaskList = ({dataList, onComplete, onDeleted}) => {
+    const elements = dataList.map((item) => {
+        const { id, important, description } = item
         return (
             <li key={id} className={important}>
-                <Task otherItems={[important, descr]}/>
-                {element}
+                <Task
+                    itemDescription={description}
+                    onComplete={() => onComplete(id)}
+                    onDeleted={() => onDeleted(id)}
+                />
+                <input type="text" className="edit" defaultValue="Editing task"></input>
             </li>
         )
     })
