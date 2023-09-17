@@ -6,21 +6,30 @@ import Footer from '../footer';
 
 import './app.css'
 
+import { v4 as uuidv4 } from 'uuid';
 class App extends Component {
   state = {
     todoData: [
-      {id: 1, description: 'Completed task', important: null},
-      {id: 2, description: 'Editing task', important: null},
-      {id: 3, description: 'Active task', important: null},
+      this.createTodoItem('Completed task'),
+      this.createTodoItem('Editing task'),
+      this.createTodoItem('Active task')
     ]
+  }
+
+  createTodoItem(label) {
+    return {
+      id: uuidv4(),
+      label,
+      completed: false,
+      editing: false
+    }
   }
 
   completedItem = (id) => {
     this.setState(({ todoData }) => {
-      const todoDataCopy = [...todoData]
+      const todoDataCopy = JSON.parse(JSON.stringify(todoData))
       const index = todoDataCopy.findIndex((el) => el.id === id)
-      if (todoDataCopy[index].important) todoDataCopy[index].important = null
-      else todoDataCopy[index].important = 'completed'
+      todoDataCopy[index].completed = !todoDataCopy[index].completed
       
       return {
         todoData: todoDataCopy
@@ -30,7 +39,7 @@ class App extends Component {
 
   deletedItem = (id) => {
     this.setState(({ todoData }) => {
-      const todoDataCopy = [...todoData]
+      const todoDataCopy = JSON.parse(JSON.stringify(todoData))
       const index = todoDataCopy.findIndex((el) => el.id === id)
       todoDataCopy.splice(index, 1)
 
@@ -40,6 +49,7 @@ class App extends Component {
     })
   }
   render() {
+    const itemsLeftCount = this.state.todoData.filter((el) => !el.completed).length
     return (
       <section className="todoapp">
         <header className="header">
@@ -47,8 +57,11 @@ class App extends Component {
           <NewTaskForm />
         </header>
         <section className="main">
-          <TaskList dataList={this.state.todoData} onComplete={this.completedItem} onDeleted={this.deletedItem}/>
-          <Footer />
+          <TaskList
+            dataList={this.state.todoData}
+            onToggleCompleted={this.completedItem}
+            onDeleted={this.deletedItem}/>
+          <Footer completeCount={itemsLeftCount} />
         </section>
       </section>
     );

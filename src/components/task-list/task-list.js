@@ -3,14 +3,16 @@ import Task from '../task/task';
 
 import './task-list.css'
 
-const TaskList = ({dataList, onComplete, onDeleted}) => {
+const TaskList = ({dataList, onToggleCompleted, onDeleted}) => {
     const elements = dataList.map((item) => {
-        const { id, important, description } = item
+        let classCompleted = null
+        const { id, completed, label } = item
+        if (completed) classCompleted = 'completed'
         return (
-            <li key={id} className={important}>
+            <li key={id} className={classCompleted}>
                 <Task
-                    itemDescription={description}
-                    onComplete={() => onComplete(id)}
+                    itemDescription={label}
+                    onToggleCompleted={() => onToggleCompleted(id)}
                     onDeleted={() => onDeleted(id)}
                 />
                 <input type="text" className="edit" defaultValue="Editing task"></input>
