@@ -3,6 +3,8 @@ import Task from '../task/task';
 
 import './task-list.css'
 
+import PropTypes from 'prop-types';
+
 const TaskList = ({dataList, onToggleCompleted, onDeleted}) => {
     const elements = dataList.map((item) => {
         let classCompleted = null
@@ -25,5 +27,11 @@ const TaskList = ({dataList, onToggleCompleted, onDeleted}) => {
         </ul>
     );
 }
+
+TaskList.propTypes = {
+    dataList: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onToggleCompleted: PropTypes.func.isRequired,
+    onDeleted: PropTypes.func.isRequired
+  }
 
 export default TaskList;

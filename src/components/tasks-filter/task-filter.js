@@ -2,20 +2,32 @@ import React from 'react';
 
 import './task-filter.css'
 
-const TaskFilter = () => {
+const statusButton = [
+  {id: 'all', label: 'All'},
+  {id: 'active', label: 'Active'},
+  {id: 'completed', label: 'Completed'}
+]
+
+const TaskFilter = ({activeFilter, setFilter}) => {
+  const buttons = statusButton.map(({id, label}) => {
+    const thisFilter = id === setFilter
+    const classNames = thisFilter ? 'selected' : null
     return (
-        <ul className="filters">
-            <li>
-              <button className="selected">All</button>
-            </li>
-            <li>
-              <button>Active</button>
-            </li>
-            <li>
-              <button>Completed</button>
-            </li>
-        </ul>
-    );
+      <li key={id}>
+        <button
+          className= {classNames}
+          onClick={() => activeFilter(id)}
+        >
+          {label}
+        </button>
+      </li>
+    )
+  })
+  return (
+      <ul className="filters">
+          {buttons}
+      </ul>
+  );
 }
 
 export default TaskFilter;
