@@ -1,12 +1,11 @@
-import React from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 
 import './task.css'
 
-import PropTypes from 'prop-types';
-
-const Task = ({onDeleted, onToggleCompleted, itemDescription}) => {
-  const date = formatDistanceToNow(new Date(), {includeSeconds: true})
+const Task = ({ onDeleted, onToggleCompleted, itemDescription }) => {
+  const date = formatDistanceToNow(new Date(), { includeSeconds: true })
   return (
     <div className="view">
       <input className="toggle" type="checkbox" onClick={onToggleCompleted}></input>
@@ -17,12 +16,11 @@ const Task = ({onDeleted, onToggleCompleted, itemDescription}) => {
       <button className="icon icon-edit"></button>
       <button className="icon icon-destroy" onClick={onDeleted}></button>
     </div>
-  );
+  )
 }
 
 Task.propTypes = {
-  itemDescription: PropTypes.string.isRequired
+  itemDescription: PropTypes.string.isRequired,
 }
 
-export default Task;
-
+export default Task
