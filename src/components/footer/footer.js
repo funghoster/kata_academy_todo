@@ -19,13 +19,14 @@ const Footer = ({ completeCount, onDeleteAllActive, onActiveFilter, setFilter })
 
 Footer.defaultProps = {
   completeCount: 0,
+  setFilter: 'all',
 }
 
 Footer.propTypes = {
   completeCount: PropTypes.number,
   onDeleteAllActive: PropTypes.func,
   onActiveFilter: PropTypes.func,
-  setFilter: PropTypes.func,
+  setFilter: PropTypes.string,
 }
 
 export default Footer

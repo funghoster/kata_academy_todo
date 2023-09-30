@@ -9,21 +9,25 @@ import './app.css'
 
 class App extends Component {
   state = {
-    todoData: [this.todoItem('Completed task'), this.todoItem('Editing task'), this.todoItem('Active task')],
+    todoData: [],
     setFilter: 'all',
   }
 
-  todoItem(label) {
+  todoItem(task) {
     return {
       id: uuidv4(),
-      label,
+      label: task.label,
       completed: false,
       editing: false,
+      timer: {
+        min: task.min,
+        sec: task.sec,
+      },
     }
   }
 
-  createNewItem = (label) => {
-    const newItem = this.todoItem(label)
+  createNewItem = (task) => {
+    const newItem = this.todoItem(task)
     this.setState(({ todoData }) => {
       const newArr = [...todoData, newItem]
       return {
@@ -75,6 +79,31 @@ class App extends Component {
     else if (filter === 'active') return data.filter((item) => !item.completed)
     else if (filter === 'completed') return data.filter((item) => item.completed)
   }
+
+  // pauseTimer = (id, status) => {
+  //   this.setState(({ todoData }) => {
+  //     const onPause = todoData.map((task) => {
+  //       if (task.id === id) {
+  //         return { ...task, timer: { ...task.timer, paused: status } }
+  //       }
+  //     })
+  //     return {
+  //       todoData: onPause,
+  //     }
+  //   })
+  // }
+  // overTimer = (id, status) => {
+  //   this.setState(({ todoData }) => {
+  //     const onOver = todoData.map((task) => {
+  //       if (task.id === id) {
+  //         return { ...task, timer: { ...task.timer, over: status } }
+  //       }
+  //     })
+  //     return {
+  //       todoData: onOver,
+  //     }
+  //   })
+  // }
 
   render() {
     const itemsLeftCount = this.state.todoData.filter((el) => !el.completed).length
