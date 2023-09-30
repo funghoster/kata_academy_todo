@@ -23,7 +23,7 @@ class Task extends Component {
     if (paused) return
     if (over) clearInterval(this.timerID)
     if (min === 0 && sec === 0) {
-      this.setState({ over: !over })
+      this.setState({ over: true })
     } else if (sec === 0) {
       this.setState({
         min: min - 1,

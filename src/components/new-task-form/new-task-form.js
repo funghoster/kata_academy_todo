@@ -59,7 +59,7 @@ class NewTaskForm extends Component {
           placeholder="Sec"
           type="number"
           min={0}
-          max={60}
+          max={59}
           value={this.state.sec}
           onChange={this.onSecChange}
         ></input>

@@ -80,31 +80,6 @@ class App extends Component {
     else if (filter === 'completed') return data.filter((item) => item.completed)
   }
 
-  // pauseTimer = (id, status) => {
-  //   this.setState(({ todoData }) => {
-  //     const onPause = todoData.map((task) => {
-  //       if (task.id === id) {
-  //         return { ...task, timer: { ...task.timer, paused: status } }
-  //       }
-  //     })
-  //     return {
-  //       todoData: onPause,
-  //     }
-  //   })
-  // }
-  // overTimer = (id, status) => {
-  //   this.setState(({ todoData }) => {
-  //     const onOver = todoData.map((task) => {
-  //       if (task.id === id) {
-  //         return { ...task, timer: { ...task.timer, over: status } }
-  //       }
-  //     })
-  //     return {
-  //       todoData: onOver,
-  //     }
-  //   })
-  // }
-
   render() {
     const itemsLeftCount = this.state.todoData.filter((el) => !el.completed).length
     const visibleItems = this.filterItems(this.state.setFilter, this.state.todoData)
