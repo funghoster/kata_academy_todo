@@ -75,9 +75,16 @@ class App extends Component {
   }
 
   filterItems(filter, data) {
-    if (filter === 'all') return data
-    else if (filter === 'active') return data.filter((item) => !item.completed)
-    else if (filter === 'completed') return data.filter((item) => item.completed)
+    switch (filter) {
+      case 'all':
+        return data
+
+      case 'active':
+        return data.filter((item) => !item.completed)
+
+      case 'completed':
+        return data.filter((item) => item.completed)
+    }
   }
 
   render() {
