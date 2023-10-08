@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import TaskList from '../task-list'
@@ -7,13 +7,11 @@ import Footer from '../footer'
 
 import './app.css'
 
-class App extends Component {
-  state = {
-    todoData: [],
-    setFilter: 'all',
-  }
+const App = () => {
+  const [todoData, setTodoData] = useState([])
+  const [filter, setFilter] = useState('all')
 
-  todoItem(task) {
+  const todoItem = (task) => {
     return {
       id: uuidv4(),
       label: task.label,
@@ -26,55 +24,41 @@ class App extends Component {
     }
   }
 
-  createNewItem = (task) => {
-    const newItem = this.todoItem(task)
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newItem]
-      return {
-        todoData: newArr,
-      }
+  const createNewItem = (task) => {
+    const newItem = todoItem(task)
+    setTodoData((data) => {
+      return [...data, newItem]
     })
   }
 
-  completedItem = (id) => {
-    this.setState(({ todoData }) => {
-      const todoDataCopy = JSON.parse(JSON.stringify(todoData))
-      const index = todoDataCopy.findIndex((el) => el.id === id)
-      todoDataCopy[index].completed = !todoDataCopy[index].completed
-
-      return {
-        todoData: todoDataCopy,
-      }
+  const completedItem = (id) => {
+    setTodoData((data) => {
+      const index = data.findIndex((el) => el.id === id)
+      data[index].completed = !data[index].completed
+      return [...data]
     })
   }
 
-  deletedItem = (id) => {
-    this.setState(({ todoData }) => {
-      const todoDataCopy = JSON.parse(JSON.stringify(todoData))
-      const index = todoDataCopy.findIndex((el) => el.id === id)
-      todoDataCopy.splice(index, 1)
-
-      return {
-        todoData: todoDataCopy,
-      }
+  const deletedItem = (id) => {
+    setTodoData((data) => {
+      const index = data.findIndex((el) => el.id === id)
+      data.splice(index, 1)
+      return [...data]
     })
   }
 
-  deleteAllActive = () => {
-    this.setState(({ todoData }) => {
-      const todoDataCopy = JSON.parse(JSON.stringify(todoData))
-      const delCopy = todoDataCopy.filter((el) => !el.completed)
-      return {
-        todoData: delCopy,
-      }
+  const deleteAllActive = () => {
+    setTodoData((data) => {
+      const delCopy = data.filter((el) => !el.completed)
+      return [...delCopy]
     })
   }
 
-  onActiveFilter = (id) => {
-    this.setState({ setFilter: id })
+  const onActiveFilter = (id) => {
+    setFilter(id)
   }
 
-  filterItems(filter, data) {
+  function filterItems(filter, data) {
     switch (filter) {
       case 'all':
         return data
@@ -86,28 +70,25 @@ class App extends Component {
         return data.filter((item) => item.completed)
     }
   }
-
-  render() {
-    const itemsLeftCount = this.state.todoData.filter((el) => !el.completed).length
-    const visibleItems = this.filterItems(this.state.setFilter, this.state.todoData)
-    return (
-      <section className="todoapp">
-        <header className="header">
-          <h1>todos</h1>
-          <NewTaskForm createItem={this.createNewItem} />
-        </header>
-        <section className="main">
-          <TaskList dataList={visibleItems} onToggleCompleted={this.completedItem} onDeleted={this.deletedItem} />
-          <Footer
-            completeCount={itemsLeftCount}
-            onDeleteAllActive={this.deleteAllActive}
-            onActiveFilter={this.onActiveFilter}
-            setFilter={this.state.setFilter}
-          />
-        </section>
+  const itemsLeftCount = todoData.filter((el) => !el.completed).length
+  const visibleItems = filterItems(filter, todoData)
+  return (
+    <section className="todoapp">
+      <header className="header">
+        <h1>todos</h1>
+        <NewTaskForm createItem={createNewItem} />
+      </header>
+      <section className="main">
+        <TaskList dataList={visibleItems} onToggleCompleted={completedItem} onDeleted={deletedItem} />
+        <Footer
+          completeCount={itemsLeftCount}
+          onDeleteAllActive={deleteAllActive}
+          onActiveFilter={onActiveFilter}
+          setFilter={filter}
+        />
       </section>
-    )
-  }
+    </section>
+  )
 }
 
 export default App

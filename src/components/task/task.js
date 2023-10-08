@@ -1,67 +1,56 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
-
 import './task.css'
 
-class Task extends Component {
-  state = {
-    min: this.props.timer.min,
-    sec: this.props.timer.sec,
-    paused: true,
-    over: false,
-  }
-  componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 1000)
-  }
-  componentWillUnmount() {
-    clearInterval(this.timerID)
-  }
+const Task = ({ onDeleted, onToggleCompleted, itemDescription, timer }) => {
+  const [time, setTime] = useState({ min: timer.min, sec: timer.sec })
+  const [paused, setPaused] = useState(true)
+  const [over, setOver] = useState(false)
 
-  tick = () => {
-    const { min, sec, paused, over } = this.state
-    if (paused) return
-    if (over) clearInterval(this.timerID)
-    if (min === 0 && sec === 0) {
-      this.setState({ over: true })
-    } else if (sec === 0) {
-      this.setState({
-        min: min - 1,
-        sec: 59,
-      })
-    } else {
-      this.setState({
-        min: min,
-        sec: sec - 1,
-      })
-    }
-  }
+  useEffect(() => {
+    const timerID = setInterval(() => {
+      if (paused || over) return
+      if (time.min === 0 && time.sec === 0) setOver(true)
+      else if (time.sec === 0) {
+        setTime((times) => {
+          return {
+            min: times.min - 1,
+            sec: 59,
+          }
+        })
+      } else {
+        setTime((times) => {
+          return {
+            min: times.min,
+            sec: times.sec - 1,
+          }
+        })
+      }
+    }, 1000)
+    return () => clearInterval(timerID)
+  }, [paused, over, time])
 
-  onPause = (status) => {
-    this.setState({ paused: status })
+  const onPause = (status) => {
+    setPaused(status)
   }
-
-  render() {
-    const { onDeleted, onToggleCompleted, itemDescription } = this.props
-    const { min, sec } = this.state
-    const date = formatDistanceToNow(new Date(), { includeSeconds: true })
-    return (
-      <div className="view">
-        <input className="toggle" type="checkbox" onClick={onToggleCompleted}></input>
-        <label>
-          <span className="title">{itemDescription}</span>
-          <span className="description">
-            <button className="icon icon-play" onClick={() => this.onPause(false)}></button>
-            <button className="icon icon-pause" onClick={() => this.onPause(true)}></button>
-            {min}:{sec}
-          </span>
-          <span className="description">created {date} ago</span>
-        </label>
-        <button className="icon icon-edit"></button>
-        <button className="icon icon-destroy" onClick={onDeleted}></button>
-      </div>
-    )
-  }
+  const date = formatDistanceToNow(new Date(), { includeSeconds: true })
+  return (
+    <div className="view">
+      <input className="toggle" type="checkbox" onClick={onToggleCompleted}></input>
+      <label>
+        <span className="title">{itemDescription}</span>
+        <span className="description">
+          <button className="icon icon-play" onClick={() => onPause(false)}></button>
+          <button className="icon icon-pause" onClick={() => onPause(true)}></button>
+          {time.min}:{time.sec}
+        </span>
+        <span className="description">created {date} ago</span>
+      </label>
+      <button className="icon icon-edit"></button>
+      <button className="icon icon-destroy" onClick={onDeleted}></button>
+    </div>
+  )
 }
 
 Task.propTypes = {
